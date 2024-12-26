@@ -7,6 +7,124 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
+        html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+}
+
+/* Apply snap scrolling to all sections */
+section {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+/* Scroll indicator styling */
+.scroll-indicator {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+}
+
+.scroll-dots {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.scroll-dot {
+    width: 12px;
+    height: 12px;
+    margin: 15px 0;
+    position: relative;
+}
+
+.scroll-dot a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.scroll-dot a:hover,
+.scroll-dot a.active {
+    background: #60a5fa;
+    transform: scale(1.2);
+}
+
+.scroll-dot a::before {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    left: -8px;
+    top: -8px;
+    transition: all 0.3s ease;
+}
+
+.scroll-dot a.active::before {
+    border-color: rgba(96, 165, 250, 0.3);
+}
+
+/* Section indicator tooltip */
+.scroll-dot a::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.scroll-dot a:hover::after {
+    opacity: 1;
+    visibility: visible;
+    right: 25px;
+}
+
+/* Progress bar styling */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #60a5fa, #3b82f6);
+    width: 0%;
+    transition: width 0.2s ease;
+}
+
+@media (max-width: 768px) {
+    .scroll-indicator {
+        display: none; /* Hide on mobile */
+    }
+}
+
         .navbar {
             width: 80px;
             position: fixed;
@@ -244,67 +362,202 @@
 }
 
 #profile {
-            background: #1a1a1a;
-            color: #fff;
-            padding: 5rem 0;
-        }
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    padding: 5rem 0;
+    color: #fff;
+}
 
-        .profile-container {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 4rem;
+.profile-wrapper {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 2rem;
-    min-height: 600px; /* Add fixed height to container */
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, #60a5fa, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.section-subtitle {
+    color: #94a3b8;
+    font-size: 1.2rem;
+}
+
+.profile-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+    align-items: start;
+}
+
+.profile-image-container {
+    position: relative;
 }
 
 .profile-image {
     position: relative;
-    width: 100%;
-    height: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 
 .profile-image img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 20px;
-    position: relative;
-    z-index: 2;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
 }
 
-.profile-image::after {
+.profile-image:hover img {
+    transform: scale(1.05);
+}
+
+.profile-social {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.social-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    background: #3b82f6;
+    transform: translateY(-3px);
+}
+
+.profile-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.bio-section h3,
+.education-section h3,
+.skills-section h3 {
+    color: #60a5fa;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.timeline::before {
     content: '';
     position: absolute;
-    width: calc(100% - 20px); /* Subtract the offset to match image width */
-    height: calc(100% - 20px); /* Subtract the offset to match image height */
-    border: 2px solid #60a5fa;
-    border-radius: 20px;
-    top: 20px;
-    left: 20px;
-    z-index: 1;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(96,165,250,0.3);
 }
-        .profile-content h2 {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            color: #60a5fa;
-        }
 
-        .skill-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
+.timeline-item {
+    position: relative;
+    padding-bottom: 2rem;
+}
 
-        .skill-tag {
-            background: rgba(96, 165, 250, 0.1);
-            color: #60a5fa;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-        }
+.timeline-dot {
+    position: absolute;
+    left: -2.4rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: #3b82f6;
+    border: 2px solid #0f172a;
+}
+
+.timeline-content {
+    background: rgba(255,255,255,0.05);
+    padding: 1.5rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.timeline-content h4 {
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-date {
+    color: #60a5fa;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-description {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+}
+
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.skill-tag {
+    background: rgba(96,165,250,0.1);
+    color: #60a5fa;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    border: 1px solid rgba(96,165,250,0.3);
+    transition: all 0.3s ease;
+}
+
+.skill-tag:hover {
+    background: rgba(96,165,250,0.2);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 968px) {
+    .profile-container {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .profile-image-container {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 640px) {
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .timeline {
+        padding-left: 1.5rem;
+    }
+
+    .timeline-dot {
+        left: -1.9rem;
+    }
+}
 
         /* Portfolio Section */
         #portfolio {
@@ -365,74 +618,156 @@
             font-size: 0.9rem;
         }
 
-        /* Contact Section */
         #contact {
-            background: #1a1a1a;
-            padding: 5rem 0;
-        }
+    background: #111827;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
 
-        .contact-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
+.contact-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
 
-        .contact-info {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
+.contact-title {
+    color: #fff;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, #60a5fa, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
-        .contact-card {
-            background: #2a2a2a;
-            padding: 2rem;
-            border-radius: 15px;
-            text-align: center;
-        }
+.contact-subtitle {
+    color: #94a3b8;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
 
-        .contact-card i {
-            font-size: 2rem;
-            color: #60a5fa;
-            margin-bottom: 1rem;
-        }
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
 
-        .contact-form {
-            background: #2a2a2a;
-            padding: 2rem;
-            border-radius: 15px;
-        }
+.social-item {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
+.social-item:hover {
+    transform: translateY(-5px);
+    background: #3b82f6;
+    color: white;
+}
 
-        .form-control {
-            background: #333;
-            border: none;
-            color: #fff;
-            padding: 1rem;
-            border-radius: 10px;
-        }
+.contact-form-wrapper {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-        .form-control:focus {
-            background: #444;
-            box-shadow: 0 0 0 2px #60a5fa;
-        }
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
 
-        .submit-btn {
-            background: #60a5fa;
-            color: #fff;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
+.input-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
 
-        .submit-btn:hover {
-            background: #3b82f6;
-        }
+input, textarea {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.send-button {
+    background: linear-gradient(45deg, #60a5fa, #3b82f6);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.send-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.send-button i {
+    transition: transform 0.3s ease;
+}
+
+.send-button:hover i {
+    transform: translateX(5px);
+}
+
+@media (max-width: 640px) {
+    .input-group {
+        grid-template-columns: 1fr;
+    }
+    
+    .contact-title {
+        font-size: 2.5rem;
+    }
+    
+    .social-links {
+        gap: 1rem;
+    }
+    
+    .social-item {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+    }
+}
+
+/* Animasi smooth untuk input fields */
+@keyframes focusIn {
+    from { transform: scale(0.98); opacity: 0.8; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+input:focus, textarea:focus {
+    animation: focusIn 0.2s ease forwards;
+}
     </style>
 </head>
 <body>
@@ -484,25 +819,79 @@
         </div>
     </section>
     <section id="profile">
-      <div class="profile-container">
-          <div class="profile-image">
-              <img src="danie.jpg" alt="Daniel Sandy">
-          </div>
-          <div class="profile-content">
-              <h2>About Me</h2>
-              <p>Saya adalah developer multitalenta dengan keahlian di bidang web dan mobile development, desain cheat game, serta editing kreatif. Saya menggabungkan kreativitas dan teknologi untuk menciptakan solusi inovatif dan berdampak. Siap berkolaborasi untuk menghasilkan karya luar biasa! 🚀</p>
-              <p>Saya selalu bersemangat untuk belajar teknologi baru dan mengaplikasikannya dalam project-project yang menantang.</p>
-              <div class="skill-tags">
-                  <span class="skill-tag">HTML/CSS</span>
-                  <span class="skill-tag">JavaScript</span>
-                  <span class="skill-tag">React</span>
-                  <span class="skill-tag">UI/UX Design</span>
-                  <span class="skill-tag">Video Editing</span>
-                  <!-- Add more skills -->
-              </div>
-          </div>
-      </div>
-  </section>
+        <div class="profile-wrapper">
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <h2 class="section-title">About Me</h2>
+                <p class="section-subtitle">Discover my journey</p>
+            </div>
+    
+            <div class="profile-container">
+                <!-- Image Column -->
+                <div class="profile-image-container">
+                    <div class="profile-image">
+                        <img src="danie.jpg" alt="Daniel Sandy">
+                    </div>
+                    <div class="profile-social">
+                        <a href="https://github.com/Mitonaa" class="social-link"><i class="bi bi-github"></i></a>
+                        <a href="https://t.me/dsne_" class="social-link"><i class="bi bi-telegram"></i></a>
+                        <a href="mailto:danieleriguna@gmail.com" class="social-link"><i class="bi bi-envelope"></i></a>
+                    </div>
+                </div>
+    
+                <!-- Content Column -->
+                <div class="profile-content">
+                    <div class="bio-section">
+                        <h3>Who am I?</h3>
+                        <p>Saya adalah developer multitalenta dengan keahlian di bidang web dan mobile development, desain cheat game, serta editing kreatif. Saya menggabungkan kreativitas dan teknologi untuk menciptakan solusi inovatif dan berdampak.</p>
+                        <p>Saya selalu bersemangat untuk belajar teknologi baru dan mengaplikasikannya dalam project-project yang menantang. 🚀</p>
+                    </div>
+    
+                    <!-- Education Timeline -->
+                    <div class="education-section">
+                        <h3>Education Journey</h3>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <h4>STMIK LIKMI</h4>
+                                    <p class="timeline-date">2024 - Sekarang</p>
+                                    <p>Sistem Informatika</p>
+                                    <p class="timeline-description">Fokus pada pengembangan web, mobile apps, dan software engineering</p>
+                                </div>
+                            </div>
+    
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <h4>SMK PUSDIKHUBAD</h4>
+                                    <p class="timeline-date">2021 - 2024</p>
+                                    <p>Rekayasa Perangkat Lunak</p>
+                                    <p class="timeline-description">Mempelajari dasar-dasar pemrograman dan pengembangan software</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Skills Section -->
+                    <div class="skills-section">
+                        <h3>Technical Skills</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">HTML/CSS</span>
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">React</span>
+                            <span class="skill-tag">UI/UX Design</span>
+                            <span class="skill-tag">Video Editing</span>
+                            <span class="skill-tag">PHP</span>
+                            <span class="skill-tag">MySQL</span>
+                            <span class="skill-tag">Java</span>
+                            <span class="skill-tag">Android Development</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
   <!-- Portfolio Section -->
   <section id="portfolio">
@@ -571,38 +960,48 @@
       </div>
   </section>
 
-  <!-- Contact Section -->
-  <section id="contact">
-      <div class="contact-container">
-          <div class="contact-info">
-              <div class="contact-card">
-                  <i class="bi bi-envelope"></i>
-                  <h3>Email</h3>
-                  <p>danieleriguna@gmail.com</p>
-              </div>
-              <div class="contact-card">
-                  <i class="bi bi-telephone"></i>
-                  <h3>Phone</h3>
-                  <p>+62 853 1573 3652</p>
-              </div>
-          </div>
-          <div class="contact-form">
-              <h2>Send Message</h2>
-              <form>
-                  <div class="form-group">
-                      <input type="text" class="form-control" placeholder="Your Name">
-                  </div>
-                  <div class="form-group">
-                      <input type="email" class="form-control" placeholder="Your Email">
-                  </div>
-                  <div class="form-group">
-                      <textarea class="form-control" rows="5" placeholder="Your Message"></textarea>
-                  </div>
-                  <button type="submit" class="submit-btn">Send Message</button>
-              </form>
-          </div>
-      </div>
-  </section>
+  <section id="contact" class="py-5">
+    <div class="contact-container">
+        <!-- Simple Header -->
+        <div class="text-center mb-5">
+            <h2 class="contact-title">Let's Talk!</h2>
+            <div class="contact-subtitle">Ada ide project menarik? Mari diskusi!</div>
+        </div>
+
+        <!-- Social Links -->
+        <div class="social-links">
+            <a href="mailto:danieleriguna@gmail.com" class="social-item">
+                <i class="bi bi-envelope-fill"></i>
+            </a>
+            <a href="https://wa.me/6285315733652" class="social-item">
+                <i class="bi bi-whatsapp"></i>
+            </a>
+            <a href="https://github.com/Mitonaa" class="social-item">
+                <i class="bi bi-github"></i>
+            </a>
+            <a href="https://t.me/dsne_" class="social-item">
+                <i class="bi bi-telegram"></i>
+            </a>
+        </div>
+
+        <!-- Simple Contact Form -->
+        <div class="contact-form-wrapper">
+            <form class="contact-form">
+                <div class="input-group">
+                    <input type="text" placeholder="Nama" required>
+                    <input type="email" placeholder="Email" required>
+                </div>
+                <input type="text" placeholder="Subjek" required>
+                <textarea placeholder="Pesan" rows="4" required></textarea>
+                <button type="submit" class="send-button">
+                    <span>Kirim Pesan</span>
+                    <i class="bi bi-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
